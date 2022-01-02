@@ -26,9 +26,17 @@ private slots:
     void on_pushButton_6_clicked();
     void on_pushButton_7_clicked();
     void on_pushButton_8_clicked();
+    void switchTurn();
+    void winnerCounting();
+
+signals:
+    void turnCompleted();
+    void buttonValue();
 
 private:
     Ui::MainWindow *ui;
+    QString playerMarker;
+    QString btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
