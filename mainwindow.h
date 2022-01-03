@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,15 +29,20 @@ private slots:
     void on_pushButton_8_clicked();
     void switchTurn();
     void winnerCounting();
+    void scoreboard();
 
 signals:
     void turnCompleted();
     void buttonValue();
+    void countPoints();
 
 private:
     Ui::MainWindow *ui;
-    QString playerMarker;
-    QString btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8;
+    QChar playerMarker;
+    QString strPlayer;
+    QChar boardButton[3][3] =  {{'0', '1', '2'}, {'3', '4', '5'}, {'6', '7', '8'}};
+    int pointsX, pointsO, pointsTie, tieCounter;
+    bool playerTurnSwitch, scoreLock;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

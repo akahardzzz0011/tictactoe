@@ -6,12 +6,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    playerTurnSwitch = false, scoreLock = false;
     playerMarker = 'X';
-    btn0 = 'Z', btn1 = 'Z', btn2 = 'Z', btn3 = 'Z', btn4 = 'Z', btn5 = 'Z',
-            btn6 = 'Z', btn7 = 'Z', btn8 = 'Z';
-    ui->textEditInfo->setText("Player " + playerMarker + " turn");
+    strPlayer = 'X';
+    pointsX = 0, pointsO = 0, pointsTie = 0, tieCounter = 0;
+    ui->textEditInfo->setText("Player " + strPlayer + " turn");
     connect(this, SIGNAL(turnCompleted()), this, SLOT(switchTurn()));
     connect(this, SIGNAL(buttonValue()), this, SLOT(winnerCounting()));
+    connect(this, SIGNAL(countPoints()), this, SLOT(scoreboard()));
 }
 
 MainWindow::~MainWindow()
@@ -22,10 +24,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_0_clicked()
 {
-    if(btn0 == 'Z') {
+    if(boardButton[0][0] == '0') {
         ui->pushButton_0->setText(playerMarker);
-        btn0 = playerMarker;
-        emit turnCompleted();
+        boardButton[0][0] = playerMarker;
+
         emit buttonValue();
     }
 }
@@ -33,10 +35,10 @@ void MainWindow::on_pushButton_0_clicked()
 
 void MainWindow::on_pushButton_1_clicked()
 {
-    if(btn1 == 'Z') {
+    if(boardButton[0][1] == '1') {
         ui->pushButton_1->setText(playerMarker);
-        btn1 = playerMarker;
-        emit turnCompleted();
+        boardButton[0][1] = playerMarker;
+
         emit buttonValue();
     }
 }
@@ -44,10 +46,10 @@ void MainWindow::on_pushButton_1_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if(btn2 == 'Z') {
+    if(boardButton[0][2] == '2') {
         ui->pushButton_2->setText(playerMarker);
-        btn2 = playerMarker;
-        emit turnCompleted();
+        boardButton[0][2] = playerMarker;
+
         emit buttonValue();
     }
 }
@@ -55,60 +57,66 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    if(btn3 == 'Z') {
+    if(boardButton[1][0] == '3') {
         ui->pushButton_3->setText(playerMarker);
-        btn3 = playerMarker;
-        emit turnCompleted();
+        boardButton[1][0] = playerMarker;
+
+        emit buttonValue();
     }
 }
 
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    if(btn4 == 'Z') {
+    if(boardButton[1][1] == '4') {
         ui->pushButton_4->setText(playerMarker);
-        btn4 = playerMarker;
-        emit turnCompleted();
+        boardButton[1][1] = playerMarker;
+
+        emit buttonValue();
     }
 }
 
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    if(btn5 == 'Z') {
+    if(boardButton[1][2] == '5') {
         ui->pushButton_5->setText(playerMarker);
-        btn5 = playerMarker;
-        emit turnCompleted();
+        boardButton[1][2] = playerMarker;
+
+        emit buttonValue();
     }
 }
 
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    if(btn6 == 'Z') {
+    if(boardButton[2][0] == '6') {
         ui->pushButton_6->setText(playerMarker);
-        btn6 = playerMarker;
-        emit turnCompleted();
+        boardButton[2][0] = playerMarker;
+
+        emit buttonValue();
     }
 }
 
 
 void MainWindow::on_pushButton_7_clicked()
 {
-    if(btn7 == 'Z') {
+    if(boardButton[2][1] == '7') {
         ui->pushButton_7->setText(playerMarker);
-        btn7 = playerMarker;
-        emit turnCompleted();
+        boardButton[2][1] = playerMarker;
+
+        emit buttonValue();
     }
 }
 
 
 void MainWindow::on_pushButton_8_clicked()
 {
-    if(btn8 == 'Z') {
+    if(boardButton[2][2] == '8') {
         ui->pushButton_8->setText(playerMarker);
-        btn8 = playerMarker;
-        emit turnCompleted();
+        boardButton[2][2] = playerMarker;
+
+        emit buttonValue();
     }
 }
 
@@ -116,18 +124,53 @@ void MainWindow::switchTurn()
 {
     if(playerMarker == 'X') {
         playerMarker = 'O';
+        strPlayer = 'O';
     } else if(playerMarker == 'O') {
         playerMarker = 'X';
+        strPlayer = 'X';
     }
-    ui->textEditInfo->setText("Player " + playerMarker + " turn");
+    ui->textEditInfo->setText("Player " + strPlayer + " turn");
 }
 
 void MainWindow::winnerCounting()
 {
-    if(btn0 == 'X' and btn1 == 'X' and btn2 == 'X') {
-        playerMarker = 'X';
-        ui->textEditInfo->setText("Player " + playerMarker + " WINS!");
+    for (int i = 0; i < 3; i++ ) {
+        if((boardButton[0][i] == boardButton[1][i] and boardButton[1][i] == boardButton[2][i]) or
+                (boardButton[i][0] == boardButton[i][1] and boardButton[i][1] == boardButton[i][2])) {
+            ui->textEditInfo->setText("Player " + strPlayer + " WINS!");
+            playerTurnSwitch = true;
+            emit countPoints();
+        }
     }
+    if((boardButton[0][0] == boardButton[1][1] and boardButton[1][1] == boardButton[2][2]) or
+            (boardButton[0][2] == boardButton[1][1] and boardButton[1][1] == boardButton[2][0])) {
+        ui->textEditInfo->setText("Player " + strPlayer + " WINS!");
+        playerTurnSwitch = true;
+        emit countPoints();
+    }
+    if(playerTurnSwitch == false) {
+        tieCounter += 1;
+        emit turnCompleted();
+    }
+    if(tieCounter == 9) {
+        emit countPoints();
+    }
+}
+
+void MainWindow::scoreboard()
+{
+    if(playerMarker == 'X' and tieCounter < 9 and scoreLock == false) {
+        pointsX += 1;
+        scoreLock = true;
+    } else if (playerMarker == 'O' and tieCounter < 9 and scoreLock == false) {
+        pointsO += 1;
+        scoreLock = true;
+    } else if(scoreLock == false){
+        pointsTie += 1;
+    }
+    qDebug() << "X " << pointsX;
+    qDebug() << "O " << pointsO;
+    qDebug() << "tie" << pointsTie;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
