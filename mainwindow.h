@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
-#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,7 +38,7 @@ signals:
 private:
     Ui::MainWindow *ui;
     QChar playerMarker;
-    QString strPlayer;
+    QString strPlayer, strPointsX, strPointsO, strPointsTie;
     QChar boardButton[3][3] =  {{'0', '1', '2'}, {'3', '4', '5'}, {'6', '7', '8'}};
     int pointsX, pointsO, pointsTie, tieCounter;
     bool playerTurnSwitch, scoreLock;
