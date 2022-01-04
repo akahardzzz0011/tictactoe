@@ -9,8 +9,12 @@ MainWindow::MainWindow(QWidget *parent)
     playerTurnSwitch = false, scoreLock = false;
     playerMarker = 'X';
     strPlayer = 'X';
+    strPointsX = "0", strPointsO = "0", strPointsTie = "0";
     pointsX = 0, pointsO = 0, pointsTie = 0, tieCounter = 0;
     ui->textEditInfo->setText("Player " + strPlayer + " turn");
+    ui->lineEditPlayerX->setText(strPointsX);
+    ui->lineEditPlayerO->setText(strPointsO);
+    ui->lineEditTie->setText(strPointsTie);
     connect(this, SIGNAL(turnCompleted()), this, SLOT(switchTurn()));
     connect(this, SIGNAL(buttonValue()), this, SLOT(winnerCounting()));
     connect(this, SIGNAL(countPoints()), this, SLOT(scoreboard()));
@@ -162,15 +166,22 @@ void MainWindow::scoreboard()
     if(playerMarker == 'X' and tieCounter < 9 and scoreLock == false) {
         pointsX += 1;
         scoreLock = true;
+        strPointsX = QString::number(pointsX);
+        ui->lineEditPlayerX->setText(strPointsX);
     } else if (playerMarker == 'O' and tieCounter < 9 and scoreLock == false) {
         pointsO += 1;
         scoreLock = true;
+        strPointsO = QString::number(pointsO);
+        ui->lineEditPlayerO->setText(strPointsO);
     } else if(scoreLock == false){
         pointsTie += 1;
+        ui->textEditInfo->setText("It is a tie");
+        strPointsTie = QString::number(pointsTie);
+        ui->lineEditTie->setText(strPointsTie);
     }
-    qDebug() << "X " << pointsX;
-    qDebug() << "O " << pointsO;
-    qDebug() << "tie" << pointsTie;
+
+
+
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
