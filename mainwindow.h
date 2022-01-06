@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,6 +30,8 @@ private slots:
     void switchTurn();
     void winnerCounting();
     void scoreboard();
+    void on_btnNewRound_clicked();
+    void on_btnClearScores_clicked();
 
 signals:
     void turnCompleted();

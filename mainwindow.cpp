@@ -191,3 +191,42 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
+
+void MainWindow::on_btnNewRound_clicked()
+{
+    ui->pushButton_0->setText("");
+    ui->pushButton_1->setText("");
+    ui->pushButton_2->setText("");
+    ui->pushButton_3->setText("");
+    ui->pushButton_4->setText("");
+    ui->pushButton_5->setText("");
+    ui->pushButton_6->setText("");
+    ui->pushButton_7->setText("");
+    ui->pushButton_8->setText("");
+    playerTurnSwitch = false, scoreLock = false;
+    playerMarker = 'X', strPlayer = 'X';
+    ui->textEditInfo->setText("Player " + strPlayer + " turn");
+    tieCounter = 0;
+
+    int value = 0;
+    QChar charValue = value + '0';
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++ ) {
+            boardButton[i][j] = charValue;
+            value += 1;
+            charValue = value + '0';
+        }
+    }
+
+}
+
+
+void MainWindow::on_btnClearScores_clicked()
+{
+    pointsX = 0, pointsO = 0, pointsTie = 0;
+    strPointsX = "0", strPointsO = "0", strPointsTie = "0";
+    ui->lineEditPlayerX->setText(strPointsX);
+    ui->lineEditPlayerO->setText(strPointsO);
+    ui->lineEditTie->setText(strPointsTie);
+}
+
